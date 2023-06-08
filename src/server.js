@@ -1,5 +1,5 @@
 const express = require('express')
-//const path = require('path')
+const cors = require('cors')
 
 const db = require('./database/db')
 const routes = require('./routes/routes')
@@ -8,6 +8,30 @@ const app = express()
 
 // conexão com o banco de dados
 db.connect()
+
+// habilitando CORS
+
+const allowedOrigins = [
+    'http://127.0.0.1:5500',
+    'http://www.app.com.br'
+]
+
+app.use(cors({
+    //origin: 'http://127.0.0.1:5500' metodo para permitir um único front
+
+    origin: function(origin, callback) {
+        let allowed = true
+
+        // mobile app
+    if (!origin) allowed = true
+
+    if (!allowedOrigins.includes(origin)) allowed = false
+    
+    callback(null, allowed)
+    
+    }
+
+}))
 
 // habilita server para receber dados json
 app.use(express.json())
